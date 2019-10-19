@@ -4,7 +4,7 @@ const transformCamelCase = (textInput) => {
   let words = textInput.split(' ');
   return words.map((item) =>
     item.charAt(0).toUpperCase().concat(item.replace(item.charAt(0), ''))
-  ).join(' ');
+  ).join('');
 };
 
 const transformStream = new Transform({
