@@ -1,0 +1,4 @@
+Error: Ooops!
+    at Timeout.setInterval [as _onTimeout] (C:\Users\krist\Proyectos\GitHub\platzi-backend-node\learning-node\utilidades-debugging\console-class.js:10:21)
+    at listOnTimeout (timers.js:324:15)
+    at processTimers (timers.js:268:5)
