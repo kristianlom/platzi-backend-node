@@ -1,13 +1,16 @@
 const express = require('express');
-const { moviesMock } = require('../utils/mocks/movies');
+const MoviesService = require('../services/movies');
 
 function movies(app) {
   const router = express.Router();
   app.use('/api/movies', router);
 
+  const moviesService = new MoviesService();
+
   router.get('/', async function(req, res, next) {
+
     try {
-      const moviess = await Promise.resolve(moviesMock);
+      const moviess = await moviesService.getMovies();
 
       res.status(200).json({
         data: moviess,
@@ -19,8 +22,9 @@ function movies(app) {
   });
 
   router.get('/:movieId', async function(req, res, next) {
+    const { movieId } = req.params.movieId;
     try {
-      const moviess = await Promise.resolve(moviesMock[0]);
+      const moviess = await moviesService.getMovie({ movieId });
 
       res.status(200).json({
         data: moviess,
@@ -32,8 +36,11 @@ function movies(app) {
   });
 
   router.post('/', async function(req, res, next) {
+
+    const { body: movie } = req;
+
     try {
-      const createdMovieId = await Promise.resolve(moviesMock[0].id);
+      const createdMovieId = await moviesService.createMovie({ movie });
 
       res.status(201).json({
         data: createdMovieId,
@@ -45,8 +52,15 @@ function movies(app) {
   });
 
   router.put('/:movieId', async function(req, res, next) {
+
+    const { movieId } = req.params.movieId;
+    const { body: movie } = req;
+
     try {
-      const updateMovieId = await Promise.resolve(moviesMock[0].id);
+      const updateMovieId = await moviesService.updateMovie({
+        movieId,
+        movie
+      });
 
       res.status(200).json({
         data: updateMovieId,
@@ -58,8 +72,11 @@ function movies(app) {
   });
 
   router.delete('/:movieId', async function(req, res, next) {
+
+    const { movieId } = req.params.movieId;
+
     try {
-      const deleteMovieId = await Promise.resolve(moviesMock[0].id);
+      const deleteMovieId = await moviesService.deleteMovie({ movieId });
 
       res.status(200).json({
         data: deleteMovieId,
