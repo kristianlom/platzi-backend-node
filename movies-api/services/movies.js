@@ -22,6 +22,11 @@ class MoviesService {
   async deleteMovie() {
     return moviesMock[0].id;
   }
+
+  async partialUpdateMovie() {
+    return moviesMock[0].id;
+  }
+
 }
 
 module.exports = MoviesService;

@@ -86,6 +86,21 @@ function movies(app) {
       next(err);
     }
   });
+  router.patch('/:movieId', async function (req, res, next) {
+    const {movieId} =req.params;
+    const {body: movie} = req;
+
+    try{
+      const updateMovieId = await moviesService.partialUpdateMovie({movieId, movie});
+      res.status(200).json({
+        data: updateMovieId,
+        message: 'Movie updated partially'
+      })
+
+    }catch(err) {
+      next(err);
+    }
+  });
 
 }
 
