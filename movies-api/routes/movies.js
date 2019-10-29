@@ -9,8 +9,10 @@ function movies(app) {
 
   router.get('/', async function(req, res, next) {
 
+    const { tags } = req.query;
+
     try {
-      const moviess = await moviesService.getMovies();
+      const moviess = await moviesService.getMovies({ tags });
 
       res.status(200).json({
         data: moviess,
@@ -22,8 +24,8 @@ function movies(app) {
   });
 
   router.get('/:movieId', async function(req, res, next) {
-    const { movieId } = req.params.movieId;
     try {
+      const { movieId } = req.params;
       const moviess = await moviesService.getMovie({ movieId });
 
       res.status(200).json({
@@ -53,7 +55,7 @@ function movies(app) {
 
   router.put('/:movieId', async function(req, res, next) {
 
-    const { movieId } = req.params.movieId;
+    const { movieId } = req.params;
     const { body: movie } = req;
 
     try {
@@ -73,9 +75,8 @@ function movies(app) {
 
   router.delete('/:movieId', async function(req, res, next) {
 
-    const { movieId } = req.params.movieId;
-
     try {
+      const { movieId } = req.params;
       const deleteMovieId = await moviesService.deleteMovie({ movieId });
 
       res.status(200).json({
@@ -83,21 +84,6 @@ function movies(app) {
         message: 'movie updated'
       });
     } catch (err) {
-      next(err);
-    }
-  });
-  router.patch('/:movieId', async function (req, res, next) {
-    const {movieId} =req.params;
-    const {body: movie} = req;
-
-    try{
-      const updateMovieId = await moviesService.partialUpdateMovie({movieId, movie});
-      res.status(200).json({
-        data: updateMovieId,
-        message: 'Movie updated partially'
-      })
-
-    }catch(err) {
       next(err);
     }
   });
