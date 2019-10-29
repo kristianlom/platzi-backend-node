@@ -1,9 +1,8 @@
 const boom = require('@hapi/boom');
 
-function validate(body, schema) {
-  console.log(body);
-  console.log(schema);
-  return false;
+function validate(data, schema) {
+  const { error } = schema.validate(data, { errors: { stack: true } });
+  return error;
 }
 
 function validationHandler(schema, check = 'body') {
