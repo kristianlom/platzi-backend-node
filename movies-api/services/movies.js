@@ -33,7 +33,6 @@ class MoviesService {
     return movie || [];
   }
 
-
 }
 
 module.exports = MoviesService;
