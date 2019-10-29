@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "set DEBUG=app:* && nodemon index",
     "start": "set NODE_ENV=production && node index",
-    "test": "mocha --exit"
+    "test": "mocha --exit",
+    "cover": "nyc npm run test",
+    "report": "nyc report --reporter=html && start firefox.exe ./covarage/index.html"
   },
   "keywords": [],
   "author": "Kristian López",
@@ -27,6 +29,7 @@
     "lint-staged": "^9.4.2",
     "mocha": "^6.2.2",
     "nodemon": "^1.19.4",
+    "nyc": "^14.1.1",
     "prettier": "^1.18.2",
     "proxyquire": "^2.1.3",
     "sinon": "^7.5.0",
@@ -41,6 +44,15 @@
     "*.js": [
       "eslint --fix",
       "git add"
+    ]
+  },
+  "nyc": {
+    "all": true,
+    "include": [
+      "routes",
+      "services",
+      "lib",
+      "utils"
     ]
   }
 }
