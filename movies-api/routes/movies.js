@@ -4,6 +4,11 @@ const MoviesService = require('../services/movies');
 const { movieIdSchema, createMovieSchema, updateMovieSchema } = require('../utils/schemas/movies');
 
 const validationHandler = require('../utils/middleware/validationHandler');
+const cacheResponse = require('../utils/cacheResponse');
+const {
+  FIVE_MINUTES_IN_SECONDS,
+  SIXTY_MINUTES_IN_SECONDS
+} = require('../utils/time');
 
 function moviesApi(app) {
   const router = express.Router();
@@ -12,7 +17,7 @@ function moviesApi(app) {
   const moviesService = new MoviesService();
 
   router.get('/', async function(req, res, next) {
-
+    cacheResponse(res, FIVE_MINUTES_IN_SECONDS);
     const { tags } = req.query;
 
     try {
@@ -28,12 +33,13 @@ function moviesApi(app) {
   });
 
   router.get('/:movieId', validationHandler({ movieId: movieIdSchema }, 'params'), async function(req, res, next) {
+    cacheResponse(res, SIXTY_MINUTES_IN_SECONDS);
+    const { movieId } = req.params;
     try {
-      const { movieId } = req.params;
-      const moviess = await moviesService.getMovie({ movieId });
+      const movies = await moviesService.getMovie({ movieId });
 
       res.status(200).json({
-        data: moviess,
+        data: movies,
         message: 'movie retrieved'
       });
     } catch (err) {
@@ -63,13 +69,13 @@ function moviesApi(app) {
     const { body: movie } = req;
 
     try {
-      const updateMovieId = await moviesService.updateMovie({
+      const updatedMovieId = await moviesService.updateMovie({
         movieId,
         movie
       });
 
       res.status(200).json({
-        data: updateMovieId,
+        data: updatedMovieId,
         message: 'movie updated'
       });
     } catch (err) {
@@ -77,15 +83,15 @@ function moviesApi(app) {
     }
   });
 
-  router.delete('/:movieId', async function(req, res, next) {
+  router.delete('/:movieId', validationHandler({ movieId: movieIdSchema }, 'params'), async function(req, res, next) {
 
+    const { movieId } = req.params;
     try {
-      const { movieId } = req.params;
-      const deleteMovieId = await moviesService.deleteMovie({ movieId });
+      const deletedMovieId = await moviesService.deleteMovie({ movieId });
 
       res.status(200).json({
-        data: deleteMovieId,
-        message: 'movie updated'
+        data: deletedMovieId,
+        message: 'movie deleted'
       });
     } catch (err) {
       next(err);
